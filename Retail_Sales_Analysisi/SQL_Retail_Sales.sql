@@ -1,6 +1,6 @@
 CREATE DATABASE Retail_Sales_Analysis;
 
-CREATE TABLE Sales_Analysis (
+CREATE TABLE retail_sales (
 	transactions_id	INT PRIMARY KEY,
 	sale_date DATE,
 	sale_time TIME,
@@ -14,13 +14,14 @@ CREATE TABLE Sales_Analysis (
 	total_sale FLOAT
 );
 
-SELECT * FROM sales_analysis
+
+SELECT * FROM retail_sales
 LIMIT 10;
 
-SELECT COUNT(*) FROM sales_analysis;
+SELECT COUNT(*) FROM retail_sales;
 
 -- Data Cleaning
-SELECT * FROM sales_analysis
+SELECT * FROM retail_sales
 WHERE transactions_id IS NULL
 	OR sale_date IS NULL
 	OR sale_time IS NULL
@@ -30,7 +31,7 @@ WHERE transactions_id IS NULL
 	OR cogs IS NULL
 	OR total_sale IS NULL;
 
-DELETE FROM sales_analysis
+DELETE FROM retail_sales
 WHERE transactions_id IS NULL
 	OR sale_date IS NULL
 	OR sale_time IS NULL
@@ -42,12 +43,12 @@ WHERE transactions_id IS NULL
 
 -- Data Exploraion 
 -- How many sales we have?\
-SELECT COUNT(*) as total_sale From sales_analysis;
+SELECT COUNT(*) as total_sale From retail_sales;
 
 -- How many uniuque customer we have?
-SELECT COUNT(DISTINCT customer_id) as total_sale FROM sales_analysis;
+SELECT COUNT(DISTINCT customer_id) as total_sale FROM retail_sales;
 
-SELECT DISTINCT category FROM sales_analysis;
+SELECT DISTINCT category FROM retail_sales;
 
 -- Business Key Problem 
 -- My Analysis  Findings
@@ -64,12 +65,12 @@ SELECT DISTINCT category FROM sales_analysis;
 
 -- 1. Tulis kueri SQL untuk mengambil semua kolom untuk penjualan yang dilakukan pada '2022-11-05':
 
-SELECT * FROM sales_analysis
+SELECT * FROM retail_sales
 WHERE sale_date = '2022-11-05';
 
 -- 2. Tulis kueri SQL untuk mengambil semua transaksi di mana kategorinya adalah 'Pakaian' dan kuantitas yang terjual lebih dari 4 pada bulan November 2022:
 
-SELECT * FROM sales_analysis
+SELECT * FROM retail_sales
 WHERE category = 'Clothing'
 AND TO_CHAR(sale_date, 'YYYY-MM') = '2022-11'
 AND quantiy >= 4;
@@ -77,24 +78,24 @@ AND quantiy >= 4;
 -- 3. Tulis kueri SQL untuk menghitung total penjualan (total_sale) untuk setiap kategori.
 
 SELECT category, SUM(total_sale) as Net_sale
-FROM sales_analysis
+FROM retail_sales
 GROUP BY 1;
 
 -- 4. Tulis kueri SQL untuk menemukan usia rata-rata pelanggan yang membeli barang dari kategori 'Kecantikan'.
 
 SELECT ROUND(AVG(age)) as Avg_Age
-FROM sales_analysis
+FROM retail_sales
 WHERE category = 'Beauty';
 
 -- 5. Tulis kueri SQL untuk menemukan semua transaksi di mana total_sale lebih besar dari 1000.
 
-SELECT * FROM sales_analysis
+SELECT * FROM retail_sales
 WHERE total_sale > 1000;
 
 -- 6. Tulis kueri SQL untuk menemukan jumlah total transaksi (transaction_id) yang dilakukan oleh setiap jenis kelamin di setiap kategori.
 
 SELECT category, gender, COUNT(*) as total_transaction
-FROM sales_analysis
+FROM retail_sales
 GROUP BY category, gender
 ORDER BY 1;
 
@@ -112,7 +113,7 @@ SELECT
 	AVG(total_sale) as avg_sale, 
 	RANK() OVER(PARTITION BY EXTRACT(YEAR FROM sale_date)
 	ORDER BY AVG(total_sale) DESC) as rank
-FROM sales_analysis
+FROM retail_sales
 GROUP BY 1, 2
 )
 WHERE rank = 1
@@ -122,7 +123,7 @@ WHERE rank = 1
 SELECT 
 	customer_id,
 	SUM(total_sale) as total_sales
-FROM sales_analysis
+FROM retail_sales
 GROUP BY 1
 ORDER BY 2 DESC
 LIMIT 5;
@@ -130,7 +131,7 @@ LIMIT 5;
 -- 9. Tulis kueri SQL untuk menemukan jumlah pelanggan unik yang membeli barang dari setiap kategori.
 
 SELECT category, COUNT(DISTINCT customer_id) as unique_customer
-FROM sales_analysis
+FROM retail_sales
 GROUP BY 1;
 
 -- 10. Tulis kueri SQL untuk membuat setiap shift dan jumlah pesanan (Contoh Pagi <12, Siang Antara 12 & 17, Malam >17)
@@ -144,7 +145,7 @@ SELECT *,
 		WHEN EXTRACT(HOUR FROM sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
 		ELSE 'Evening'
 	END as shift
-FROM sales_analysis
+FROM retail_sales
 )
 SELECT
 	shift,
@@ -152,4 +153,4 @@ SELECT
 FROM hourly_sale
 GROUP BY shift
 
--- SELECT EXTRACT(HOUR FROM CURRENT_TIME)
+-- End Project
